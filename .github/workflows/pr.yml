@@ -1,0 +1,13 @@
+# Posts the reviewer summary as soon as a PR is opened (ci.yml refreshes it on
+# every push). Protected file; logic lives in factory-workflows.
+name: pr
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+permissions: {}
+jobs:
+  summary:
+    uses: rightmer-foundry/factory-workflows/.github/workflows/summary.yml@v1
+    permissions:
+      contents: read
+      pull-requests: write

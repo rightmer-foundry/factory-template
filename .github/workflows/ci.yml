@@ -1,0 +1,18 @@
+# Thin caller. All CI logic lives in rightmer-foundry/factory-workflows and is
+# released by tag; this file is protected and only the provisioner changes it.
+name: ci
+on:
+  push:
+    branches: ['**']
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+permissions: {}
+jobs:
+  ci:
+    uses: rightmer-foundry/factory-workflows/.github/workflows/ci.yml@v1
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+      deployments: write

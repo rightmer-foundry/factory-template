@@ -1,0 +1,20 @@
+{
+  "name": "foundry-project",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p test",
+    "types": "wrangler types --env-interface Env src/worker-configuration.d.ts",
+    "check-bindings": "node scripts/check-bindings.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.4.0",
+    "@cloudflare/workers-types": "^5.20261010.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.149.0"
+  }
+}

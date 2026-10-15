@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Replaced with the project key when the repo is created.
+  "name": "foundry-project",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true }
+
+  // Bindings are declared here by NAME only, for `wrangler dev` and
+  // `wrangler types`. The deployer ignores everything below and binds the
+  // real resources from the Foundry manifest (.factory/manifest.json lists
+  // the names you are allowed). Example, once DB is granted:
+  //
+  // "d1_databases": [{ "binding": "DB", "database_name": "local", "database_id": "local", "migrations_dir": "migrations" }],
+  // "kv_namespaces": [{ "binding": "CACHE", "id": "local" }],
+  // "r2_buckets": [{ "binding": "UPLOADS", "bucket_name": "local" }],
+  //
+  // Static assets (optional):
+  // "assets": { "directory": "./public", "binding": "ASSETS" }
+}
