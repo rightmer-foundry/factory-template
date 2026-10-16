@@ -29,6 +29,15 @@ phone; your job is to make that review quick and safe.
   until the PR it opens is merged and `.factory/manifest.json` shows it.
 - Previews and production have **separate** databases and buckets. A preview
   can never touch production data.
+- **Durable Objects** work only if the project was created with
+  `durable_objects: true` (check `.factory/manifest.json`). They are this
+  Worker's own classes, so you declare them yourself in `wrangler.jsonc`:
+  bindings under `durable_objects.bindings` and classes under `exports`
+  (`{ "Room": { "type": "durable-object", "storage": "sqlite" } }`), never the
+  legacy `migrations` array. Rename with a `renamed` tombstone plus the new
+  entry. Deleting a class (`"state": "deleted"`) destroys its data: previews
+  accept it, production refuses it, so ask the human first. Such projects
+  have one preview URL (`<key>--preview`), and every push replaces it.
 - D1 migrations go in `migrations/NNNN_name.sql` (forward-only, ≤ 1 MB each).
   They run on the preview database on every branch deploy and on production
   after merge. A `DROP` is flagged to the reviewer — avoid it unless asked.
