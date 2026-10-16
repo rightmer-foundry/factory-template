@@ -32,7 +32,7 @@ const declared = [
   ...(wrangler.kv_namespaces ?? []).map((b) => [b.binding, 'kv']),
   ...(wrangler.r2_buckets ?? []).map((b) => [b.binding, 'r2']),
 ];
-const unsupported = ['services', 'queues', 'durable_objects', 'hyperdrive', 'vectorize', 'analytics_engine_datasets', 'ai', 'browser', 'workflows', 'dispatch_namespaces', 'mtls_certificates', 'send_email', 'routes', 'route', 'triggers']
+const unsupported = ['services', 'queues', 'hyperdrive', 'vectorize', 'analytics_engine_datasets', 'ai', 'browser', 'workflows', 'dispatch_namespaces', 'mtls_certificates', 'send_email', 'routes', 'route', 'triggers']
   .filter((k) => wrangler[k] !== undefined && !(Array.isArray(wrangler[k]) && wrangler[k].length === 0));
 
 const errors = [];
@@ -41,6 +41,21 @@ for (const [name, type] of declared) {
   else if (granted.get(name) !== type) errors.push(`${name} is granted as ${granted.get(name)}, declared as ${type}`);
 }
 for (const k of unsupported) errors.push(`"${k}" in wrangler.jsonc is not supported by the Foundry deployer`);
+// Durable Objects: this Worker's own classes, declared in "exports" (see AGENTS.md).
+const doBindings = wrangler.durable_objects?.bindings ?? [];
+const doExports = Object.entries(wrangler.exports ?? {});
+if ((doBindings.length || doExports.length) && manifest.durable_objects !== true) {
+  errors.push('Durable Objects are not enabled for this project; ask the human to set durable_objects: true in projects.yaml');
+}
+for (const b of doBindings) {
+  if (b.script_name !== undefined || b.environment !== undefined) errors.push(`durable_objects binding ${b.name}: script_name/environment are not allowed`);
+}
+for (const [cls, e] of doExports) {
+  if (e?.type !== 'durable-object') errors.push(`exports.${cls}: only "durable-object" exports are supported`);
+}
+if (wrangler.migrations !== undefined && !(Array.isArray(wrangler.migrations) && wrangler.migrations.length === 0)) {
+  errors.push('"migrations" is not supported; declare Durable Object classes in "exports" instead');
+}
 
 if (errors.length) {
   console.error(errors.map((e) => `- ${e}`).join('\n'));

@@ -15,6 +15,11 @@
   // "kv_namespaces": [{ "binding": "CACHE", "id": "local" }],
   // "r2_buckets": [{ "binding": "UPLOADS", "bucket_name": "local" }],
   //
+  // Durable Objects (only if the project has durable_objects: true). Declare
+  // your own classes here; no PR needed:
+  // "durable_objects": { "bindings": [{ "name": "ROOM", "class_name": "Room" }] },
+  // "exports": { "Room": { "type": "durable-object", "storage": "sqlite" } },
+  //
   // Static assets (optional):
   // "assets": { "directory": "./public", "binding": "ASSETS" }
 }
