@@ -41,8 +41,13 @@ phone; your job is to make that review quick and safe.
 - D1 migrations go in `migrations/NNNN_name.sql` (forward-only, ≤ 1 MB each).
   They run on the preview database on every branch deploy and on production
   after merge. A `DROP` is flagged to the reviewer — avoid it unless asked.
-- Secrets are set by the human (`wrangler secret put`), never committed.
-  Read them from `env` like any binding.
+- **Secrets** (API keys and the like): call `request_secrets` with the
+  **names** (e.g. `["OPENROUTER_API_KEY"]`). Once the human merges that PR,
+  they paste the values into the Foundry Console from their phone. Never ask
+  for a value in chat, and never commit one. `secret_status` shows which
+  names are set on production and preview. Read them as `env.NAME`, and fail
+  with a clear message when one is missing. For local dev, put values in
+  `.dev.vars` (gitignored).
 
 ## Local development
 
